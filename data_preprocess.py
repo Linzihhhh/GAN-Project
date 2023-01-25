@@ -39,10 +39,10 @@ def split(x,size,channels):
 audio_file = 'piano.mp3'
 
 sr, x = read(audio_file)
-print('herre')
+#print('herre')
 print(sr,x.shape)
 
 data=split(x,480000,2)
-write("test.mp3",sr,data[0])
+#write("test.mp3",sr,data[0])
 print(data.shape)
 np.save("piano data.npy",data)

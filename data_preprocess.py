@@ -1,6 +1,7 @@
 import pydub 
 import numpy as np
 import math
+import subprocess
 def read(f, normalized=False):
     """MP3 to numpy array"""
     a = pydub.AudioSegment.from_mp3(f)
@@ -29,6 +30,8 @@ def split(x,size,channels):
     total=(x.shape[0]/size)
     while(x.shape[0]>=size):    
         data,x=np.vsplit(x, [size])
+        data=data.T
+        data=data[0]
         data_list.append(data)
         i=i+1
         if(i%10==0):
@@ -36,13 +39,13 @@ def split(x,size,channels):
     data=np.array(data_list)
     return data
     
-audio_file = 'piano.mp3'
+audio_file = 'Dataset/piano.mp3'
 
 sr, x = read(audio_file)
 #print('herre')
 print(sr,x.shape)
 
-data=split(x,480000,2)
-#write("test.mp3",sr,data[0])
+data=split(x,sr*10,2)
+write("test.mp3",sr,data[0])
 print(data.shape)
 np.save("piano data.npy",data)

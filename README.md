@@ -11,7 +11,7 @@ results:
 
 https://user-images.githubusercontent.com/61591276/216775089-2c745ee3-fbb2-49e5-80c4-6a4a4286e5af.mp4
 
-Strikingly, no sound appear.
+Obviously, no sound appear.
 
 100th generation, 10100 steps: 
 

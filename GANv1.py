@@ -19,43 +19,42 @@ class Generator(nn.Module):
         super(Generator,self).__init__()
         self.net=nn.Sequential(
             nn.Linear(5,100),
-            nn.ReLU(),
-            nn.Linear(100,3000),
-            nn.ReLU(),
-            nn.Linear(3000,1200),
             nn.LeakyReLU(),
-            nn.Linear(1200,80000)
+            nn.Linear(100,3000),
             )
-        self.RNN=nn.RNN(80000,20,5,batch_first=True)
+        self.RNN=nn.LSTM(input_size=1500,hidden_size=2000,num_layers=5,batch_first=True)
+        self.out=nn.Linear(2000,80000)
     def forward(self,x):
         x=x.to(torch.float32)
         x=self.net(x)
-        x=self.RNN(x)
-        return x
+        x=x.view(-1,2,1500)
+        #print(x.shape)
+        r_out,(h_n,h_c)=self.RNN(x,None)
+        #print(r_out.shape)
+        out=self.out(r_out[:,-1,:])
+        return out
         
         
 
 class Discriminator(nn.Module):
     def __init__(self):
         super(Discriminator,self).__init__()
-        self.RNN=nn.RNN(80000,20,5,batch_first=True)
+        self.RNN=nn.LSTM(8000,1500,5,batch_first=True)
+        self.out=nn.Linear(1500,300)
         self.net=nn.Sequential(
-            nn.Linear(80000,1200),
+            nn.Linear(300,50),
             nn.LeakyReLU(),
-            nn.Linear(1200,3000),
-            nn.LeakyReLU(),
-            nn.Linear(3000,500),
-            nn.LeakyReLU(),
-            nn.Linear(500,1)
+            nn.Linear(50,1)
             )
     def forward(self,x):
         x=x.to(torch.float32)
-        x=self.RNN(x)
+        r_out,(h_n,h_c)=self.RNN(x)
+        x=self.out(r_out[:,-1,:])
         x=self.net(x)
         return x
 
-lr_G=0.001
-lr_D=0.001
+lr_G=0.05
+lr_D=0.05
 
 generator=Generator()
 discriminator=Discriminator()
@@ -67,17 +66,22 @@ data=np.load('Dataset/batched piano data.npy')
 print(data.shape)
 
 
+
 print(data.shape)
 p=0
 Epochs=10
 for i in range(Epochs):
     for x in data:
-        real_sound=Variable(torch.FloatTensor(x))
+        #print(x.shape)
+        
+        x=torch.FloatTensor(x)
+        x=x.view(5,10,8000)
+        real_sound=Variable(x)
         optimizer_D.zero_grad()
         z=Variable(torch.from_numpy(np.random.normal(0,1,(5,5))))
         fake_sound=generator(z).detach()
         
-        loss_d= -torch.mean(discriminator(real_sound))+torch.mean(discriminator(fake_sound))
+        loss_d= -torch.mean(discriminator(real_sound))+torch.mean(discriminator(fake_sound.view(-1,10,8000)))
         
         loss_d.backward()
         optimizer_D.step()
@@ -85,7 +89,7 @@ for i in range(Epochs):
         if(p%100==0):
             optimizer_G.zero_grad()
             gen_sound=generator(z)
-            loss_G=-torch.mean(discriminator(gen_sound))
+            loss_G=-torch.mean(discriminator(gen_sound.view(-1,10,8000)))
             loss_G.backward()
             optimizer_G.step()
             song=gen_sound.data.numpy()

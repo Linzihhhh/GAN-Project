@@ -13,7 +13,7 @@ def write(f, sr, x, normalized=False):
         y = np.int16(x)
     song = pydub.AudioSegment(y.tobytes(), frame_rate=sr, sample_width=2, channels=channels)
     song.export(f, format="mp3", bitrate="320k")
-
+print(torch.cuda.is_available())
 class Generator(nn.Module):
     def __init__(self):
         super(Generator,self).__init__()
@@ -62,7 +62,7 @@ optimizer_D=torch.optim.RMSprop(discriminator.parameters(),lr=lr_D)
 data=np.load('Dataset/batched piano data.npy')
 print(data.shape)
 p=0
-Epochs=1
+Epochs=10
 for i in range(Epochs):
     for x in data:
         real_sound=Variable(torch.FloatTensor(x))
@@ -75,7 +75,7 @@ for i in range(Epochs):
         loss_d.backward()
         optimizer_D.step()
         p=p+1
-        if(p%10==0):
+        if(p%100==0):
             optimizer_G.zero_grad()
             gen_sound=generator(z)
             loss_G=-torch.mean(discriminator(gen_sound))

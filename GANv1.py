@@ -22,12 +22,12 @@ class Generator(nn.Module):
             nn.LeakyReLU(),
             nn.Linear(100,3000),
             )
-        self.RNN=nn.LSTM(input_size=1500,hidden_size=2000,num_layers=5,batch_first=True)
-        self.out=nn.Linear(2000,80000)
+        self.RNN=nn.LSTM(input_size=300,hidden_size=500,num_layers=5,batch_first=True)
+        self.out=nn.Linear(500,80000)
     def forward(self,x):
         x=x.to(torch.float32)
         x=self.net(x)
-        x=x.view(-1,2,1500)
+        x=x.view(-1,10,300)
         #print(x.shape)
         r_out,(h_n,h_c)=self.RNN(x,None)
         #print(r_out.shape)
@@ -39,8 +39,8 @@ class Generator(nn.Module):
 class Discriminator(nn.Module):
     def __init__(self):
         super(Discriminator,self).__init__()
-        self.RNN=nn.LSTM(8000,1500,5,batch_first=True)
-        self.out=nn.Linear(1500,300)
+        self.RNN=nn.LSTM(8000,800,5,batch_first=True)
+        self.out=nn.Linear(800,300)
         self.net=nn.Sequential(
             nn.Linear(300,50),
             nn.LeakyReLU(),
@@ -53,8 +53,8 @@ class Discriminator(nn.Module):
         x=self.net(x)
         return x
 
-lr_G=0.05
-lr_D=0.05
+lr_G=0.1
+lr_D=0.1
 
 generator=Generator()
 discriminator=Discriminator()
@@ -78,7 +78,7 @@ for i in range(Epochs):
         x=x.view(5,10,8000)
         real_sound=Variable(x)
         optimizer_D.zero_grad()
-        z=Variable(torch.from_numpy(np.random.normal(0,1,(5,5))))
+        z=Variable(torch.from_numpy(np.random.normal(0,4,(5,5))))
         fake_sound=generator(z).detach()
         
         loss_d= -torch.mean(discriminator(real_sound))+torch.mean(discriminator(fake_sound.view(-1,10,8000)))

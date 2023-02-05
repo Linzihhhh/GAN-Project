@@ -69,7 +69,7 @@ print(data.shape)
 
 print(data.shape)
 p=0
-Epochs=10
+Epochs=50
 for i in range(Epochs):
     for x in data:
         #print(x.shape)
@@ -97,7 +97,7 @@ for i in range(Epochs):
             
             write(f'{i}th {p}step.mp3',8000,song[0])
             print("Step=",p)
-            break
+            
 torch.save(generator,'G.pt')
 torch.save(discriminator,'D.pt')
 

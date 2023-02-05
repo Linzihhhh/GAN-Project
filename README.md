@@ -34,7 +34,33 @@ Stop training, the noise is disruptive.
 
 
 GANv1 Adjust model to RNN for generator and discriminator
+
 result:
+
+1th generation 200 step:
+
+(put the result here in this line)
+
+Clear piano sound with rythm , but noise is loud
+
+20th generation 3600 step:
+
+(put the result here in this line)
+
+Several clips of piano appears, but noise still appear
+
+49th generation 8600 step:
+
+(put the result here in this line)
+
+The result is same as 20th, the reason may be overfitting or inadequate epochs, whatever we stop training.
+
+
+
+
+
+
+
 
 
 

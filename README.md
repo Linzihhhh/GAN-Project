@@ -39,19 +39,19 @@ result:
 
 1th generation 200 step:
 
-(put the result here in this line)
+https://github.com/Linzihhhh/GAN-Project/blob/main/GANv1%20result/1th%20200step.mp3
 
 Clear piano sound with rythm , but noise is loud
 
 20th generation 3600 step:
 
-(put the result here in this line)
+https://github.com/Linzihhhh/GAN-Project/blob/main/GANv1%20result/20th%203600step.mp3
 
 Several clips of piano appears, but noise still appear
 
 49th generation 8600 step:
 
-(put the result here in this line)
+https://github.com/Linzihhhh/GAN-Project/blob/main/GANv1%20result/49th%208600step.mp3
 
 The result is same as 20th, the reason may be overfitting or inadequate epochs, whatever we stop training.
 
